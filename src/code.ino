@@ -1,6 +1,7 @@
 #include <EtherCard.h>
 #include <dht.h>
 #define DHT11_PIN 5
+#define DEBUG true
 
 static uint32_t timer;
 dht DHT;
@@ -13,8 +14,7 @@ static byte myip[] = { 172,16,2,2 };
 static byte gwip[] = { 172,16,2,1 };
 static byte dnsip[] = { 172,16,0,3 };
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
-const char website[] PROGMEM = "172.16.0.8";
-static byte api[] = { 172,16,1,25 };
+const char website[] PROGMEM = "adb.dokku.d.h";
 
 static void my_callback (byte status, word off, word len)
 {
@@ -60,8 +60,8 @@ void setup()
 {
     Serial.begin(9600);
 
-    // while the serial stream is not open, do nothing:
-    while (!Serial) ;
+    if (DEBUG)
+        while (!Serial) ;
 
     if (ether.begin(sizeof Ethernet::buffer, mymac) == 0)
         Serial.println(F("Failed to access Ethernet controller"));
@@ -74,9 +74,6 @@ void setup()
 
     if (!ether.dnsLookup(website))
         Serial.println("DNS failed");
-
-    ether.copyIp(ether.hisip, api);
-    ether.hisport = 5000;
 
     ether.printIp("SRV:", ether.hisip);
     sendData();
