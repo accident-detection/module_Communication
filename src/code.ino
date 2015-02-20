@@ -29,7 +29,7 @@ static void sendData() {
 
     byte sd = stash.create();
 
-    stash.print("{\"token\": \"...\", \"GPSlat\": null, \"GPSlog\": null, \"GPSalt\": null, \"temp\": ");
+    stash.print("{\"GPSlat\": null, \"GPSlog\": null, \"GPSalt\": null, \"temp\": ");
     stash.print(readTemp());
     stash.print(", \"errorCode\": null }");
     stash.save();
@@ -41,6 +41,7 @@ static void sendData() {
     "Host: $F" "\r\n"
     "Content-Length: $D" "\r\n"
     "Content-Type: application/json" "\r\n"
+    "x-adb-token: REDACTED" "\r\n"
     "\r\n"
     "$H"),
     website, website, stash_size, sd);
