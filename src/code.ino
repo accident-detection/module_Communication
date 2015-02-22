@@ -16,7 +16,7 @@ static byte dnsip[] = { 172,16,0,3 };
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 const char website[] PROGMEM = "adb.dokku.d.h";
 
-static void my_callback (byte status, word off, word len)
+static void my_callback(byte status, word off, word len)
 {
     Serial.println(">>>");
     Ethernet::buffer[off+300] = 0;
