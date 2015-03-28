@@ -1,10 +1,7 @@
 #include <EtherCard.h>
-#include <dht.h>
-#define DHT11_PIN 5
 #define DEBUG true
 
 static uint32_t timer;
-dht DHT;
 
 static byte session;
 Stash stash;
@@ -16,21 +13,13 @@ static byte dnsip[] = { 172,16,0,3 };
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 const char website[] PROGMEM = "adb.dokku.d.h";
 
-static void my_callback(byte status, word off, word len)
-{
-    Serial.println(">>>");
-    Ethernet::buffer[off+300] = 0;
-    Serial.print((const char*) Ethernet::buffer + off);
-    Serial.println("...");
-}
-
 static void sendData() {
     Serial.println("Sending data...");
 
     byte sd = stash.create();
 
     stash.print("{\"GPSlat\": null, \"GPSlog\": null, \"GPSalt\": null, \"temp\": ");
-    stash.print(readTemp());
+    stash.print(40);
     stash.print(", \"errorCode\": null }");
     stash.save();
     int stash_size = stash.size();
@@ -51,16 +40,11 @@ static void sendData() {
     session = ether.tcpSend();
 }
 
-String readTemp()
-{
-    DHT.read11(DHT11_PIN);
-    return String(DHT.temperature, DEC);
-}
-
 void setup()
 {
     Serial.begin(9600);
 
+    // REMOVE THIS
     if (DEBUG)
         while (!Serial) ;
 
@@ -68,13 +52,6 @@ void setup()
         Serial.println(F("Failed to access Ethernet controller"));
 
     ether.staticSetup(myip, gwip, dnsip);
-
-    ether.printIp("IP:", ether.myip);
-    ether.printIp("GW:", ether.gwip);
-    ether.printIp("DNS:", ether.dnsip);
-
-    if (!ether.dnsLookup(website))
-        Serial.println("DNS failed");
 
     ether.printIp("SRV:", ether.hisip);
     sendData();
