@@ -62,7 +62,7 @@ void loop()
     ether.packetLoop(ether.packetReceive());
 
     const char* reply = ether.tcpReply(session);
-    if (reply != 0) {
+    if (reply == 0) {
         Serial.println("Got a response!");
         Serial.println(reply);
     }
